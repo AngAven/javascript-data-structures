@@ -4,11 +4,133 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/webstorm-icon-logo.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WS playground</title>
+  <title>JavaScript Data Structures - Linked Lists</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap">
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+  <header>
+    <h1>JavaScript Linked Lists</h1>
+    <p>Interactive data structure implementations</p>
+  </header>
 
-<script src="/src/hash-table.js"></script>
+  <div class="container">
+    <div class="info-box">
+      <p>This project demonstrates different linked list implementations in JavaScript. Select an implementation to see it in action.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Choose an Implementation</h2>
+      </div>
+      <div class="card-body">
+        <div class="button-group">
+          <button id="singly">Singly Linked List</button>
+          <button id="doubly">Doubly Linked List</button>
+          <button id="circular">Circular Linked List</button>
+          <button id="operations">Linked List Operations</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Console Output</h2>
+      </div>
+      <div class="card-body">
+        <div class="output-container">
+          <div class="output-header">
+            <div>Results:</div>
+            <div class="output-actions">
+              <button id="clear-output" class="clear-btn">Clear Console</button>
+            </div>
+          </div>
+          <pre id="output">Select a linked list implementation to run</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>JavaScript Data Structures - Linked List Implementations</p>
+  </footer>
+
+  <script>
+    // Console output redirection
+    const outputElement = document.getElementById('output');
+    const originalConsoleLog = console.log;
+    const originalConsoleTable = console.table;
+    const buttons = document.querySelectorAll('.button-group button');
+    
+    console.log = function(...args) {
+      originalConsoleLog.apply(console, args);
+      outputElement.innerHTML += args.join(' ') + '\n';
+      // Auto-scroll to bottom
+      outputElement.scrollTop = outputElement.scrollHeight;
+    };
+    
+    console.table = function(data) {
+      originalConsoleTable.apply(console, [data]);
+      
+      // Create a simple text representation of the table
+      if (Array.isArray(data)) {
+        const keys = Object.keys(data[0] || {});
+        let tableOutput = '\n';
+        
+        // Header
+        tableOutput += keys.join('\t') + '\n';
+        tableOutput += keys.map(() => '--------').join('\t') + '\n';
+        
+        // Rows
+        data.forEach(item => {
+          tableOutput += keys.map(key => item[key]).join('\t') + '\n';
+        });
+        
+        outputElement.innerHTML += tableOutput;
+        outputElement.scrollTop = outputElement.scrollHeight;
+      }
+    };
+    
+    // Set active button
+    buttons.forEach(button => {
+      button.addEventListener('click', function() {
+        buttons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    
+    // Clear console button
+    document.getElementById('clear-output').addEventListener('click', function() {
+      outputElement.innerHTML = 'Console cleared. Select an implementation to run.\n';
+    });
+    
+    // Button event listeners
+    document.getElementById('singly').addEventListener('click', function() {
+      outputElement.innerHTML = ''; // Clear previous output
+      runScript('/src/singly-liked-list.js');
+    });
+    
+    document.getElementById('doubly').addEventListener('click', function() {
+      outputElement.innerHTML = ''; // Clear previous output
+      runScript('/src/doubly-linked-list.js');
+    });
+    
+    document.getElementById('circular').addEventListener('click', function() {
+      outputElement.innerHTML = ''; // Clear previous output
+      runScript('/src/circular-linked-list.js');
+    });
+    
+    document.getElementById('operations').addEventListener('click', function() {
+      outputElement.innerHTML = ''; // Clear previous output
+      runScript('/src/linked-list-operations.js');
+    });
+    
+    function runScript(scriptPath) {
+      const script = document.createElement('script');
+      script.src = scriptPath;
+      document.body.appendChild(script);
+      console.log(`Running ${scriptPath}...\n`);
+    }
+  </script>
 </body>
 </html>
